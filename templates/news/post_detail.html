@@ -1,0 +1,74 @@
+<! -- наследование шаблона default -->
+{% extends 'flatpages/default.html' %}
+ 
+{% block title %} Post details {% endblock title %}
+{% load custom_filters %}
+{% block content %}
+
+<table>
+    <tr>
+        <td>
+            <b>
+                № поста
+            </b>
+        </td>
+        <td>
+            <b>
+                Заголовок
+            </b>
+        </td>
+
+        <td>
+            <b>
+                Дата публикации в формате (день.месяц.год)
+            </b>
+        </td>
+        <td>
+            <b>
+                Первые 20 слов текста статьи
+            </b>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            {{ post.id }}
+        </td>
+
+        <td>
+            {{ post.title|default:"Без заголовка"|truncatewords:4 }}
+        </td>
+        <td>
+            {{ post.created|default:"Без даты" }}
+        </td>
+        <td>
+            {{ post.text }}
+        </td>
+    </tr>
+</table>
+
+
+<!-- от станислава-->
+<h5>
+
+
+
+{% if request.user.is_authenticated %}
+
+<form method="POST" action="{% url 'subscriptions'%}">
+    {% csrf_token%}
+    <input type="hidden" name ='from'  value="post.html" >
+    <input type="hidden" name ="post_id"  value="{{post.id}}" >
+    {% if not user_is_subscribed %}
+    <input type='submit' value = 'подписаться' name="subscribe">
+    {% endif %}
+
+
+
+{% endif %}
+</form>
+
+
+</h5>
+
+{% endblock content %}

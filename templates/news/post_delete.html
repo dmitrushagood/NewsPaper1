@@ -1,0 +1,42 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<h2>Вы действительно хотите удалить данный товар?</h2>
+<table>
+    <tr>
+        <td>
+            Номер
+        </td>
+        <td>
+            Заголовок
+        </td>
+        <td>
+            Дата публикации
+        </td>
+        <td>
+            Краткое содержание (20 слов)
+        </td>
+    </tr>
+
+   <tr>
+        <td>
+            {{ post.id }}
+        </td>
+
+        <td>
+            {{ post.title|default:"Заголовка нет"|truncatewords:6 }}
+        </td>
+        <td>
+            {{ post.created|default:"Даты нет" }}
+        </td>
+        <td>
+            {{ post.text|truncatechars:15 }}
+        </td>
+    </tr>
+</table>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Подтвердить"    ></form>
+{% endblock content %}

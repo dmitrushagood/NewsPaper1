@@ -1,0 +1,41 @@
+{% extends "default.html" %}
+
+
+{% block title %}
+подписка на новости
+{% endblock title %}
+
+
+{% block page_title %}
+
+
+
+{% if subscribed %}
+Вы подписаны на  новости из разделов:
+
+<form method="POST" action="{% url 'subscriptions' %}">
+     <input type="hidden" name ='from'  value="subscribe.html" >
+    {% csrf_token %}
+<table>
+    {% for cat in request.user.category_set.all %}
+    <tr>
+<!--        <td> {{cat.name}} </td>-->
+<!--        <td> <input type="submit" name ='{{cat.id}}'  value="отписаться" > </td>-->
+
+        <td> {{cat.name}} </td>
+
+        <td> <button type="submit"  name="category" value="{{cat.id}}" >отписаться</button></td>
+    </tr>
+    {% endfor %}
+</table>
+    </form>
+
+{% else %}
+У вас нет активных подписок
+{% endif %}
+
+{% endblock page_title %}
+
+
+{% block content %}
+{% endblock content %}

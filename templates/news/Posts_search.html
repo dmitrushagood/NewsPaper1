@@ -1,0 +1,78 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+{% block title %}
+Posts
+{% endblock title %}
+{% load custom_filters %}
+{% block content %}
+<!-- Перед таблицей добавим форму для поиска -->
+<form method="GET">
+    {{ search.form }}
+    <input type="submit" value="Найти">
+</form>
+
+
+    <h1>Все статьи\новости</h1>
+    <hr>
+    <h2>Посты на текущее время: {{ time_now|date:'d M Y' }}</h2>
+    <hr>
+    {% if Posts_search %}
+        <table>
+            <tr>
+                <td>
+                    Заголовок
+                </td>
+                <td>
+                    Дата публикации
+                </td>
+                <td>
+                    Краткое содержание (20 слов)
+                </td>
+            </tr>
+        {% for Post in search.qs %}
+            <tr>
+                <td>
+                    {{Post.title|Censor}}
+                </td>
+                <td>
+                    {{Post.created}}
+                </td>
+                <td>
+                    {{Post.text|truncatewords:20|Censor}}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <h2>Товаров нет!</h2>
+    <!-- Проверяем, что поддерживается постраничный вывод -->
+
+    {% endif %}
+<!-- блок пагинатора -->
+{% if is_paginated %}
+
+    <!-- Если доступна предыдущая страница, то даём ссылку на неё и самую первую страницу -->
+    {% if page_obj.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+    {% endif %}
+
+    <!-- Показываем только текущую страницу и ближайшие к ней, чтобы список не тянулся и не захламлял страницу -->
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a>{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    <!-- Если есть следующая страница, то даём ссылку на неё и на самую последнюю страницу -->
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">>>></a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+
+{% endif %}
+<!-- блок пагинатора -->
+{% endblock content %}
+
